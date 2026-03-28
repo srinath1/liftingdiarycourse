@@ -12,7 +12,12 @@ export default async function DashboardPage({ searchParams }: Props) {
   if (!userId) redirect("/sign-in");
 
   const { date: dateParam } = await searchParams;
-  const selectedDate = dateParam ? new Date(dateParam) : new Date();
+  const selectedDate = dateParam
+    ? (() => {
+        const [year, month, day] = dateParam.split("-").map(Number);
+        return new Date(year, month - 1, day);
+      })()
+    : new Date();
 
   const workouts = await getWorkoutsForDate(userId, selectedDate);
 
