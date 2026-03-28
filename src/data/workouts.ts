@@ -91,3 +91,8 @@ export async function getWorkoutsForDate(
 
   return Array.from(workoutMap.values());
 }
+
+export async function createWorkout(data: typeof workouts.$inferInsert) {
+  const [row] = await db.insert(workouts).values(data).returning();
+  return row;
+}
