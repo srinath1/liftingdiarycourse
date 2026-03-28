@@ -30,14 +30,12 @@ type Props = {
   selectedDate: Date;
 };
 
-export default function WorkoutDiary({ workouts, selectedDate: initialDate }: Props) {
+export default function WorkoutDiary({ workouts, selectedDate }: Props) {
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   function handleDateSelect(date: Date | undefined) {
     if (!date) return;
-    setSelectedDate(date);
     setCalendarOpen(false);
     const iso = format(date, "yyyy-MM-dd");
     router.push(`/dashboard?date=${iso}`);
