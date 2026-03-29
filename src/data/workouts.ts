@@ -9,8 +9,10 @@ export type WorkoutWithExercises = {
   completedAt: Date | null;
   exercises: {
     id: string;
+    exerciseId: string;
     exerciseName: string;
     sets: {
+      id: string;
       setNumber: number;
       weight: string | null;
       reps: number | null;
@@ -34,7 +36,9 @@ export async function getWorkoutsForDate(
       startedAt: workouts.startedAt,
       completedAt: workouts.completedAt,
       workoutExerciseId: workoutExercises.id,
+      exerciseId: exercises.id,
       exerciseName: exercises.name,
+      setId: sets.id,
       setNumber: sets.setNumber,
       weight: sets.weight,
       reps: sets.reps,
@@ -72,6 +76,7 @@ export async function getWorkoutsForDate(
       if (!exerciseMap.has(exerciseKey)) {
         const exercise = {
           id: exerciseKey,
+          exerciseId: row.exerciseId ?? "",
           exerciseName: row.exerciseName ?? "",
           sets: [],
         };
@@ -81,6 +86,7 @@ export async function getWorkoutsForDate(
 
       if (row.setNumber !== null) {
         exerciseMap.get(exerciseKey)!.sets.push({
+          id: row.setId ?? "",
           setNumber: row.setNumber,
           weight: row.weight ?? null,
           reps: row.reps ?? null,
@@ -116,4 +122,66 @@ export async function updateWorkout(
     .where(and(eq(workouts.id, id), eq(workouts.userId, userId)))
     .returning();
   return row ?? null;
+}
+
+export async function getWorkoutWithExercises(
+  id: string,
+  userId: string
+): Promise<WorkoutWithExercises | null> {
+  const rows = await db
+    .select({
+      workoutId: workouts.id,
+      workoutName: workouts.name,
+      startedAt: workouts.startedAt,
+      completedAt: workouts.completedAt,
+      workoutExerciseId: workoutExercises.id,
+      exerciseId: exercises.id,
+      exerciseName: exercises.name,
+      setId: sets.id,
+      setNumber: sets.setNumber,
+      weight: sets.weight,
+      reps: sets.reps,
+    })
+    .from(workouts)
+    .leftJoin(workoutExercises, eq(workoutExercises.workoutId, workouts.id))
+    .leftJoin(exercises, eq(exercises.id, workoutExercises.exerciseId))
+    .leftJoin(sets, eq(sets.workoutExerciseId, workoutExercises.id))
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)))
+    .orderBy(workoutExercises.order, sets.setNumber);
+
+  if (rows.length === 0) return null;
+
+  const exerciseMap = new Map<string, WorkoutWithExercises["exercises"][0]>();
+  const result: WorkoutWithExercises = {
+    id: rows[0].workoutId,
+    name: rows[0].workoutName,
+    startedAt: rows[0].startedAt,
+    completedAt: rows[0].completedAt,
+    exercises: [],
+  };
+
+  for (const row of rows) {
+    if (row.workoutExerciseId) {
+      if (!exerciseMap.has(row.workoutExerciseId)) {
+        const exercise = {
+          id: row.workoutExerciseId,
+          exerciseId: row.exerciseId ?? "",
+          exerciseName: row.exerciseName ?? "",
+          sets: [],
+        };
+        exerciseMap.set(row.workoutExerciseId, exercise);
+        result.exercises.push(exercise);
+      }
+      if (row.setNumber !== null) {
+        exerciseMap.get(row.workoutExerciseId)!.sets.push({
+          id: row.setId ?? "",
+          setNumber: row.setNumber,
+          weight: row.weight ?? null,
+          reps: row.reps ?? null,
+        });
+      }
+    }
+  }
+
+  return result;
 }
