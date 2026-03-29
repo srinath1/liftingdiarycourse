@@ -5,7 +5,15 @@
       "Bash(npm run:*)",
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(where gh:*)",
+      "Bash(echo:*)",
+      "Read(//c/Program Files/GitHub CLI//**)",
+      "Read(//c/Users/srinath.erp/AppData/Local/Programs/**)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" --version)",
+      "Bash(gh --version)",
+      "Read(//c/Users/srinath.erp/**)",
+      "Bash(gh pr:*)"
     ]
   }
 }
