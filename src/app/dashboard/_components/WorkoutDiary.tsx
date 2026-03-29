@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
@@ -83,7 +84,8 @@ export default function WorkoutDiary({ workouts, selectedDate }: Props) {
               {workouts.length} workout{workouts.length !== 1 ? "s" : ""} on {formatDate(selectedDate)}
             </p>
             {workouts.map((workout) => (
-              <Card key={workout.id}>
+              <Link key={workout.id} href={`/dashboard/workout/${workout.id}`} className="block">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-base font-semibold">{workout.name}</CardTitle>
@@ -118,6 +120,7 @@ export default function WorkoutDiary({ workouts, selectedDate }: Props) {
                   </div>
                 </CardContent>
               </Card>
+              </Link>
             ))}
           </div>
         )}
