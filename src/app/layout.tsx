@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import AuthButtons from "./components/AuthButtons";
+import ThemeToggle from "./components/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,9 +30,17 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s==='dark'||(s===null&&d)){document.documentElement.classList.add('dark')}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <ClerkProvider>
           <header className="fixed top-4 right-4 flex gap-2 z-50">
+            <ThemeToggle />
             <AuthButtons />
           </header>
           {children}
