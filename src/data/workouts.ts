@@ -96,3 +96,24 @@ export async function createWorkout(data: typeof workouts.$inferInsert) {
   const [row] = await db.insert(workouts).values(data).returning();
   return row;
 }
+
+export async function getWorkoutById(id: string, userId: string) {
+  const [row] = await db
+    .select()
+    .from(workouts)
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)));
+  return row ?? null;
+}
+
+export async function updateWorkout(
+  id: string,
+  userId: string,
+  data: { name: string; startedAt: Date }
+) {
+  const [row] = await db
+    .update(workouts)
+    .set(data)
+    .where(and(eq(workouts.id, id), eq(workouts.userId, userId)))
+    .returning();
+  return row ?? null;
+}
