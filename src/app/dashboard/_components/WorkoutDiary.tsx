@@ -45,7 +45,15 @@ export default function WorkoutDiary({ workouts, selectedDate }: Props) {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-2xl px-4 py-8">
-        <h1 className="text-2xl font-semibold text-foreground mb-6">Workout Diary</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold text-foreground">Workout Diary</h1>
+          <Link
+            href="/dashboard/workout/new"
+            className="bg-black text-white text-sm font-medium rounded-md px-4 py-2 hover:bg-black/80 transition-colors"
+          >
+            Log New Workout
+          </Link>
+        </div>
 
         {/* Date Picker */}
         <div className="mb-8">
