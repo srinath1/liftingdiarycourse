@@ -1,6 +1,7 @@
 'use client'
 
 import { useClerk, useUser, UserButton } from '@clerk/nextjs'
+import { Button } from '@/components/ui/button'
 
 export default function AuthButtons() {
   const { openSignIn, openSignUp } = useClerk()
@@ -12,18 +13,12 @@ export default function AuthButtons() {
 
   return (
     <>
-      <button
-        onClick={() => openSignIn({})}
-        className="px-4 py-2 text-sm font-medium bg-white text-black border border-gray-300 rounded-md hover:bg-gray-100"
-      >
+      <Button variant="outline" onClick={() => openSignIn({})}>
         Sign In
-      </button>
-      <button
-        onClick={() => openSignUp({})}
-        className="px-4 py-2 text-sm font-medium bg-black text-white rounded-md hover:bg-gray-800"
-      >
+      </Button>
+      <Button onClick={() => openSignUp({})}>
         Sign Up
-      </button>
+      </Button>
     </>
   )
 }
