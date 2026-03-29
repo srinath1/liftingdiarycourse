@@ -9,7 +9,7 @@ export default async function EditWorkoutPage({
   params: Promise<{ workoutId: string }>;
 }) {
   const { userId } = await auth();
-  if (!userId) redirect("/sign-in");
+  if (!userId) redirect("/");
 
   const { workoutId } = await params;
   const workout = await getWorkoutById(workoutId, userId);

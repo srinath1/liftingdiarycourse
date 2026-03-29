@@ -9,7 +9,7 @@ type Props = {
 
 export default async function DashboardPage({ searchParams }: Props) {
   const { userId } = await auth();
-  if (!userId) redirect("/sign-in");
+  if (!userId) redirect("/");
 
   const { date: dateParam } = await searchParams;
   const selectedDate = dateParam
